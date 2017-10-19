@@ -62,12 +62,19 @@
     <div id="map"> </div>
             
     <script>
+        
         // Note: This example requires that you consent to location sharing when
         // prompted by your browser. If you see the error "The Geolocation service
         // failed.", it means you probably did not give permission for the browser to
         // locate you.
 
-        var map, infoWindow, pos, counter = 0, centered = false, userMarker;
+        var map, centered = false, myName;
+
+        const serverIP = '10.199.1.77:1337'
+        var myName = 'Mike Persson';
+
+        const userMarker = []
+        const userInfo = []
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -86,44 +93,72 @@
         }
 
         function geoSuccessCb(position) {
-            var point = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var point = new google.maps.LatLng(
+                position.coords.latitude,
+                position.coords.longitude
+            );
 
-            pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+            var locations = []
+            var res;
+                $.get('http://'+serverIP+'/store/name/'+myName+'/lat/'+point.lat()+'/lon/'+point.lng(), (res) => {
+                console.log("Result = ", res);
+            })
 
-            if(!userMarker) {
-                userMarker = new google.maps.Marker({
-                    position: point,
-                    map: map
-                });
-            } else {
-                userMarker.setPosition(point);
-            }
-
-            if(!infoWindow) {
-                infoWindow = new google.maps.InfoWindow;
-            }
-
-            
-            var user = 'Mike Persson';
-            // infoWindow.setPosition(point);
-            infoWindow.setContent(user + '<br>Lat: ' + point.lat + ', Lng: ' + point.lng);
-            //infoWindow.open(gmap);
-            // map.setCenter(point);
-            if(centered == false) {
-                map.setCenter(point);
-                centered = true;
-            }
-            //infoWindow.open(map);
-
-
-            // google.maps.addListener(marker, 'click', function() {
-            //     infoWindow.setPosition(point);
-            //     infoWindow.open(map, userMarker);
-            // });
+            $.get('http://'+serverIP+'/locations', (locations) => {
+                console.log(locations);
+                locations = JSON.parse(locations);
+                console.log("JSON: ", locations);
+                markerHandler(locations)
+            })
         }
+
+        function markerHandler(locations) {
+            locations.forEach(location => {
+      
+                let point = new google.maps.LatLng(
+                    location.pos.lat,
+                    location.pos.lon
+                );
+
+                // Problem med findIndex! Skapas fortfarande nya markers.
+                let idx = -1;
+                for(var i = 0; i < userInfo.length; i++) {
+                    if(location.name == userInfo[i].content) {
+                        idx = i;
+                        break;
+                    }
+                }
+
+                if(idx != -1) {
+                    userMarker[idx].setPosition(point);
+                    userInfo[idx].setPosition(point);
+                } else {
+                    let marker = new google.maps.Marker({
+                        position: point,
+                        map: map 
+                    })
+        
+                    let info = new google.maps.InfoWindow({
+                        content: location.name,
+                        position: point
+                    })
+
+                    marker.addListener('click', function() {
+                        info.open(map, marker);
+                    })
+        
+                    userMarker.push(marker);
+                    userInfo.push(info);
+                }
+
+
+                if(location.name == myName && !centered) {
+                    map.setCenter(point);
+                    centered = true;
+                }
+            })
+        }
+    
         function geoErrorCb(error) {
             alert('NEJ');
         }
