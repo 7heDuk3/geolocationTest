@@ -1,6 +1,6 @@
 ﻿let map, centered = false, myName;
 
-const serverIP = '10.199.1.77:1337'
+const serverIP = '192.168.1.4:1337'
 myName = 'Mike Persson';
 
 const userMarker = []
@@ -8,9 +8,50 @@ const userInfo = []
 
 $(function () {
   function initMap() {
+    // document.getElementById('enable-location').style.display = 'block';
+
     // map = new google.maps.Map(document.getElementById('map'), {
     //   center: { lat: -34.397, lng: 150.644 },
     //   zoom: 13
+    // });
+
+    // document.addEventListener("deviceready", function () {
+    //   cordova.dialogGPS("Your GPS is Disabled, this app needs to be enable to      works.",//message
+    //     "Use GPS, with wifi or 3G.",//description
+    //     function (buttonIndex) {//callback
+    //       switch (buttonIndex) {
+    //         case 0: break;//cancel
+    //         case 1: break;//neutro option
+    //         case 2: break;//user go to configuration
+    //       }
+    //     },
+    //     "Please Turn on GPS",//title
+    //     ["Cancel", "Later", "Go"]);//buttons
+    // });
+
+    // cordova.diagnostic.isGpsLocationEnabled(function (enabled) {
+    //   if (!enabled) {
+    //     console.log("To see people nearby, please enable your device's location!")
+    //   }
+    // })
+
+    // cordova.plugins.diagnostic.isGpsLocationEnabled(function (available) {
+    //   document.getElementById('enable-location').style.display = 'block';
+
+    //   if (available) {
+    //     getUserLocation();
+    //     setInterval(function () {
+    //       getUserLocation();
+    //     }, 3000);
+    //   } else {
+    //     document.getElementById('enable-location').style.display = 'block';
+
+
+    //   }
+
+    //   console.log("Location is " + (available ? "available" : "not available"));
+    // }, function (error) {
+    //   console.error("The following error occurred: " + error);
     // });
 
     centered = false;
@@ -24,6 +65,14 @@ $(function () {
   google.maps.event.addDomListener(window, 'load', initMap);
 })
 
+// $('#location-settings').click(function () {
+//   document.getElementById('enable-location').style.display = 'none';
+//   cordova.plugins.diagnostic.switchToLocationSettings();
+// })
+
+// $('#decline').click(function () {
+//   document.getElementById('enable-location').style.display = 'none';
+// })
 
 function geoSuccessCb(position) {
   let point = new google.maps.LatLng(
@@ -101,7 +150,19 @@ function markerHandler(locations) {
 }
 
 function geoErrorCb(error) {
-  alert('NEJ');
+  // document.addEventListener(window, function () {
+  //   cordova.dialogGPS("Your GPS is Disabled, this app needs to be enable to      works.",//message
+  //     "Use GPS, with wifi or 3G.",//description
+  //     function (buttonIndex) {//callback
+  //       switch (buttonIndex) {
+  //         case 0: break;//cancel
+  //         case 1: break;//neutro option
+  //         case 2: break;//user go to configuration
+  //       }
+  //     },
+  //     "Please Turn on GPS",//title
+  //     ["Cancel", "Later", "Go"]);//buttons
+  // });
 }
 
 function getUserLocation() {
