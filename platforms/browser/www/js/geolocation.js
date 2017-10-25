@@ -54,6 +54,13 @@ $(function () {
     //   console.error("The following error occurred: " + error);
     // });
 
+    if (!map) {
+      map = new google.maps.Map(document.getElementById('map'), {
+
+        zoom: 13
+      });
+    }
+
     centered = false;
 
     getUserLocation();
@@ -75,17 +82,23 @@ $(function () {
 // })
 
 function geoSuccessCb(position) {
+  document.getElementById('geolocation-error').style.display = 'none'
+
+
+
   let point = new google.maps.LatLng(
     position.coords.latitude,
     position.coords.longitude
   );
 
-  if (!map) {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: point,
-      zoom: 13
-    });
-  }
+  // if (!map) {
+  //   map = new google.maps.Map(document.getElementById('map'), {
+  //     center: point,
+  //     zoom: 13
+  //   });
+  // }
+
+  map.setCenter(point)
 
   centered = true;
 
@@ -150,6 +163,9 @@ function markerHandler(locations) {
 }
 
 function geoErrorCb(error) {
+  document.getElementById('geolocation-error').innerHTML = "Error: " + error
+  document.getElementById('map').style.display = 'none'
+  document.getElementById('geolocation-error').style.display = 'block'
   // document.addEventListener(window, function () {
   //   cordova.dialogGPS("Your GPS is Disabled, this app needs to be enable to      works.",//message
   //     "Use GPS, with wifi or 3G.",//description

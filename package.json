@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "displayName": "Location Service Test",
   "cordova": {
-    "platforms": [
-      "ios"
-    ],
+    "platforms": [],
     "plugins": {
       "cordova-plugin-battery-status": {},
       "cordova-plugin-camera": {},
