@@ -1,6 +1,6 @@
 ﻿let map, centered = false, myName;
 
-const serverIP = '192.168.1.4:1337'
+const serverIP = '10.199.2.151:1337'
 myName = 'Mike Persson';
 
 const userMarker = []
